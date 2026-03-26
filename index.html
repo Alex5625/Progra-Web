@@ -1,0 +1,108 @@
+<!--Laboratorio 1-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <TItle>Alexis Hernandez - 2023430003</TItle>
+</head>
+
+<body>
+    <header>
+        <h1>Bienvenidos a mi espacio personal</h1>
+        <nav>
+            <ul>
+                <li><a href="#info_personal">Información Personal</a></li>
+                <li><a href="#intereses">Intereses/Hobbies</a></li>
+                <li><a href="#proyectos">Proyectos</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <article>
+            <section id="info_personal">
+                <h2>Sobre mí</h2>
+                <p>
+                    Hola! <br>
+                    Mi nombre es Alexis Hernández, tengo 21 años y estudio la carrera de Ingeniería Civil en Bioinformática impartida en la Universidad de Talca, Chile y he participado en actividades relacionadas a genómica y biotecnologia vegetal.
+
+                </p>
+                <div style="text-align: center"> 
+                    <figure>
+                        <img src="images/IMG-20250427-WA0014.jpg" width="200">
+                        <figcaption><mark>Ese soy yo</mark></figcaption>
+                    </figure>
+                </div>            
+            </section>
+
+            <section id="intereses">
+                <h2>Intereses</h2>
+
+                <ul>
+                    <li>Cocinar</li>
+                    <li>Salir en Bicicleta</li>
+                    <li>Juegos estilo Roguelike</li>
+                </ul>
+
+            </section>
+
+            <section id="proyectos">
+                <h2>Proyectos</h2>
+                <details>
+                    <summary>Mural de gatitos Salas 200 Universidad de Talca.</summary>
+                    <p>
+                        Corresponde a un proyecto socio-científico de colaboración múltiple incluyendo ramas de la ciencia para llevarlo a cabo.
+                        <table>
+                            <tr>
+                                <td>
+                                    <figure>
+                                        <img src="images/gatitos1.jpeg" width="200">
+                                        <figcaption>Mural de Gatos - <time datetime="2025-09-09">Septiembre 2025</time>
+                                        </figcaption>
+                                    </figure>
+                                </td>
+                                <td>
+                                    <figure>
+                                        <img src="" width="200">
+                                        <figcaption>Mural de Gatos - <time datetime="2026-03-26">Marzo 2026</time></figcaption>
+                                    </figure>
+                                </td>
+                            </tr>
+                        </table>
+                    </p>
+                </details>
+
+                <details>
+                    <summary>Identificacion de SNPs e Indels en especie Vitis Vinifera</summary>
+                    
+                    <p> Realicé mi pratica sobre identificación de SNPs e Indels asociados a una ruta biosintetica de fenilpropanoides para mejoramiento genético. <br>
+                        Progreso del proyecto:
+                        <progress value="85" max="100">85%</progress>
+                        <span>85% Completado</span>
+                    </p>
+        <!-- Los elementos video Y audio no tienen soporte a texto alternativo, la solucion mas simple es agregar un parrafo <p> dentro del elemento-->
+                        <video controls width="200">
+                            <source src="videos/TEM MOLÉCULAS!!!.mp4" type="video/mp4"> 
+                            <p>MOLECULAS MOLECULAS</p>
+                        </video>
+                        <audio controls>
+                            <source src="audios/Groove Battle.mp3" type="audio/mp3" >
+                            <p>Tom Morello groove battle</p>
+                        </audio>
+                </details>
+                    
+            </section>
+        </article>
+    </main>
+    <footer>
+        <address id="contacto">
+            <h3>Contacto</h3>
+            Email: ahernandez23@alumnos.utalca.cl <br>
+            Telefono: +56981236612 <br>
+            Pagina Web desarrollada por Alexis Hernandez
+        </address>
+    </footer>
+</body>
+</html>
