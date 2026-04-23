@@ -26,5 +26,5 @@ Si prefieres ver el código fuente y ejecutar el sitio en tu propia máquina, si
 
 4. Haz doble clic en el archivo index.html para abrirlo en tu navegador web predeterminado. No se requiere instalación de dependencias ni servidores locales.
 
-👨‍💻 Autor
+# 👨‍💻 Autor
 Alexis Hernández Maldonado - Ingeniería Civil en Bioinformática
