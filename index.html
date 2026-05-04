@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Tic Tac Toe</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; }
+        .grid { display: grid; grid-template-columns: repeat(3, 100px); grid-template-rows: repeat(3, 100px); gap: 5px; margin-top: 20px; }
+        .cell { width: 100px; height: 100px; background-color: #f0f0f0; border: 1px solid #333; display: flex; justify-content: center; align-items: center; font-size: 3em; cursor: pointer; }
+        .cell:hover { background-color: #ddd; }
+        #status { margin-top: 20px; font-size: 1.5em; }
+        button { margin-top: 20px; padding: 10px 20px; font-size: 1em; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Tic Tac Toe</h1>
+    <div class="grid" id="board">
+        <div class="cell" onclick="makeMove(0)"></div>
+        <div class="cell" onclick="makeMove(1)"></div>
+        <div class="cell" onclick="makeMove(2)"></div>
+        <div class="cell" onclick="makeMove(3)"></div>
+        <div class="cell" onclick="makeMove(4)"></div>
+        <div class="cell" onclick="makeMove(5)"></div>
+        <div class="cell" onclick="makeMove(6)"></div>
+        <div class="cell" onclick="makeMove(7)"></div>
+        <div class="cell" onclick="makeMove(8)"></div>
+    </div>
+    <div id="status">Turno de X</div>
+    <button onclick="resetGame()">Reiniciar</button>
+
+    <script>
+        let board = Array(9).fill(null);
+        let currentPlayer = 'X';
+        let gameActive = true;
+
+        function makeMove(index) {
+            if (!board[index] && gameActive) {
+                board[index] = currentPlayer;
+                document.getElementsByClassName('cell')[index].innerText = currentPlayer;
+                checkResult();
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                if(gameActive) document.getElementById('status').innerText = `Turno de ${currentPlayer}`;
+            }
+        }
+
+        function checkResult() {
+            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            for (let win of wins) {
+                if (board[win[0]] && board[win[0]] === board[win[1]] && board[win[0]] === board[win[2]]) {
+                    document.getElementById('status').innerText = `¡${board[win[0]]} gana!`;
+                    gameActive = false;
+                    return;
+                }
+            }
+            if (!board.includes(null)) {
+                document.getElementById('status').innerText = "¡Empate!";
+                gameActive = false;
+            }
+        }
+
+        function resetGame() {
+            board.fill(null);
+            document.querySelectorAll('.cell').forEach(cell => cell.innerText = '');
+            currentPlayer = 'X';
+            gameActive = true;
+            document.getElementById('status').innerText = "Turno de X";
+        }
+    </script>
+</body>
+</html>
