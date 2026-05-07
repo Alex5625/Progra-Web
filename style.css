@@ -1,120 +1,173 @@
-body { 
-    padding-top: 70px; 
-    font-family: 'Poppins', sans-serif; 
-    color: #333; /* Un gris muy oscuro suele verse más elegante que el negro puro */
+/* * TALLER DE PROGRAMACIÓN WEB - ICB GAMES
+ * Estudiante: Alexis Hernández Maldonado
+ * Universidad de Talca
+ */
+
+/* --- Importación de Fuentes --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --primary-color: #0051a2; /* Azul UTalca aproximado */
+    --accent-color: #ffca28;
+    --bg-light: #f4f7f6;
+    --text-dark: #2c3e50;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-
-/* para el juego del gato */
-
-.grid-gato { 
-    display: grid; 
-    grid-template-columns: repeat(3, 100px); 
-    grid-template-rows: repeat(3, 100px); 
-    gap: 5px; 
-    margin-top: 20px; 
+body {
+    background-color: var(--bg-light);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    line-height: 1.6;
+    scroll-behavior: smooth; /* Navegación mediante anclas suave para cumplir con el requisito del PDF */
 }
 
-.grid-gato .cell { 
-    width: 100px; 
-    height: 100px; 
-    background-color: #f0f0f0; 
-    border: 1px solid #333; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    font-size: 3em; 
-    cursor: pointer; 
+/* --- Navbar --- */
+.navbar {
+    border-bottom: 2px solid var(--primary-color);
 }
 
-.grid-gato .cell:hover { 
-    background-color: #ddd; 
+.navbar-brand {
+    font-size: 1.5rem;
+    color: var(--primary-color) !important;
 }
 
-#status { 
-    margin-top: 20px; 
-    font-size: 1.5em; 
-}
-
-.button-reinicio { 
-    margin-top: 20px; 
-    padding: 10px 20px; 
-    font-size: 1em; 
-    cursor: pointer; 
-}
-
-/*contador interactivo*/
-
-.counter {
-    font-size: 2em;
-    margin-bottom: 20px;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 1em;
-    margin: 5px;
-    cursor: pointer;
-}
-
-.clicks {
-    font-size: 1.1em;
-    margin-top: 10px;
-}
-
-.imagen-contador {
-    width: 60px;
-    height: 60px;
-}
-
-#trivia-container {
-    background-color: #fff;
-    border-radius: 15px;
+/* --- Cards (Diseño de interfaz con Bootstrap) --- */
+.card {
     border: none;
+    border-radius: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #ffffff;
 }
 
-#opciones .btn:hover {
-    background-color: #4a98f7;
-    color: white;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
 }
 
+.card-title {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* --- 1. Contador Interactivo --- */
+#count {
+    color: var(--primary-color);
+    margin: 10px 0;
+}
+
+/* --- 2. Adivina el Número --- */
+.lastResult {
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+/* --- 3. Piedra, Papel o Tijera --- */
+#resultText {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+/* --- 4. Juego de Reacción --- */
+#reaction-area {
+    font-weight: 600;
+    font-size: 1.1rem;
+    min-height: 120px;
+    transition: background-color 0.15s ease;
+}
+
+/* --- 5. Trivia --- */
+#opciones .btn, #t-opciones .btn {
+    text-align: left;
+    padding: 10px;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+/* --- 6. Juego de Reflejos --- */
+#area-reflejos {
+    border: 2px dashed #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+#objetivo {
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+    transition: left 0.1s ease, top 0.1s ease;
+}
+
+/* --- 8. Tic Tac Toe (Gato) --- */
+.cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    background-color: #fff;
+    transition: background-color 0.2s;
+}
+
+.cell:hover {
+    background-color: #f8f9fa;
+}
+
+/* --- 9. Snake --- */
 #snakeCanvas {
+    background-color: #222;
+    border: 3px solid #333;
+    border-radius: 8px;
     max-width: 100%;
     height: auto;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-.whack-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 120px);
-    grid-template-rows: repeat(3, 120px);
-    gap: 15px;
-}
-
+/* --- 10. Whack-a-mole --- */
+/* --- 10. Whack-a-mole (Actualizado para Imagen) --- */
 .hole {
-    width: 120px;
-    height: 120px;
-    background-color: #6d4c41; /* Color tierra */
-    border-radius: 50%;
-    position: relative;
-    overflow: hidden;
-    border: 4px solid #3e2723;
+    /* Mantenemos bordes y sombras originales */
+    border: 3px solid #5d4037;
+    box-shadow: inset 0 5px 10px rgba(0,0,0,0.3);
+    
+    /* Preparamos el fondo para la imagen */
+    background-color: #5d4037; /* Color marrón oscuro de fondo (el interior del hoyo) */
+    background-size: contain; /* Asegura que la imagen quepa dentro sin cortarse */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* No repite la imagen */
+    
+    /* Transición suave al aparecer/desaparecer */
+    transition: background-image 0.2s ease-in-out, background-color 0.2s;
 }
 
-/* Clase que aplicaremos al topo cuando aparezca */
-.mole {
-    width: 80%;
-    height: 80%;
-    background-image: url('images/MontyMole.jpg'); /* Reutilizando tu imagen */
-    background-size: contain;
-    background-repeat: no-repeat;
-    position: absolute;
-    bottom: -100%; /* Empieza escondido */
-    left: 10%;
-    transition: bottom 0.1s ease;
-    cursor: pointer;
+/* Esta clase se añade por JS cuando aparece el topo */
+.hole.topo-visible {
+    /* Reemplaza 'images/topo.png' por la ruta real de tu imagen */
+    background-image: url('images/MontyMole.jpg'); 
+    
+    /* Opcional: hacemos el fondo transparente para que solo se vea el topo */
+    background-color: transparent; 
+    
+    /* Resaltado opcional del borde al aparecer */
+    border-color: var(--accent-color); 
 }
 
-.hole.up .mole {
-    bottom: 10%; /* Sube cuando el agujero tiene la clase 'up' */
+.hole.up {
+    background-color: #8d6e63 !important;
+    border-color: var(--accent-color);
+}
+
+/* --- Footer --- */
+footer {
+    background-color: #fff;
+    font-size: 0.85rem;
+}
+
+/* --- Responsividad --- */
+@media (max-width: 768px) {
+    .display-5 {
+        font-size: 2rem;
+    }
+    
+    .card-body {
+        padding: 1.25rem;
+    }
 }

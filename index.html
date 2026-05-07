@@ -2,249 +2,198 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Jueguitos</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICB Games</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <header>
-        <div class="container-fluid" id="inicio">
-            <div class="row">
-                <nav class="navbar navbar-expand-lg fixed-top bg-light shadow-sm">
-                    <div class="container-fluid">
-                        <a href="#" class="navbar-brand"><img src="images/logo.png" alt="logo" width="75" ></a>
-                        <button class="navbar-toggler" data-bs-target="#navbar_collapse" data-bs-toggle="collapse">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbar_collapse">
-                            <div class="navbar-nav me-auto">
-                                <a href="#gato" class="nav-link">Tic Tac Toe</a>
-                                <a href="#contador_miaus" class="nav-link">Contador Interactivo</a>
-                                <a href="#adivina_numero" class="nav-link">Avidina el Numero</a>
-                                <a href="#reacciona" class="nav-link">Reacción</a>
-                                <a href="#cachipun" class="nav-link">Cachipún</a>
-                                <a href="#Trivia" class="nav-link">Trivia</a>
-                                <a href="#reflejos" class="nav-link">Reflejos</a>
-                                <a href="#preguntas_tiempo" class="nav-link">Preguntas con temporizador</a>
-                                <a href="#snake" class="nav-link">Serpiente</a>
-                                <a href="#golpea_topo" class="nav-link">Golpea al topo</a>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
+        <nav class="navbar navbar-expand-lg fixed-top bg-white shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-primary" href="#">ICB Games</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto small">
+                        <li class="nav-item"><a class="nav-link" href="#contador">Contador</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#adivina">Adivina</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#ppt">Cachipún</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#reaccion">Reacción</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#trivia">Trivia</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#reflejos">Reflejos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#t-trivia">T-Trivia</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#gato">Gato</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#snake">Snake</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#topo">Topo</a></li>
+                    </ul>
+                </div>
             </div>
-        </div>    
+        </nav>
     </header>
-    <main>
-        <section id="gato">
-            <div class="container-fluid col-md-12 d-flex flex-column align-items-center text-center mt-5 pt-4">
-                <h1>Tic Tac Toe</h1>
-                <div class="grid-gato" id="board">
-                    <div class="cell" onclick="makeMove(0)"></div>
-                    <div class="cell" onclick="makeMove(1)"></div>
-                    <div class="cell" onclick="makeMove(2)"></div>
-                    <div class="cell" onclick="makeMove(3)"></div>
-                    <div class="cell" onclick="makeMove(4)"></div>
-                    <div class="cell" onclick="makeMove(5)"></div>
-                    <div class="cell" onclick="makeMove(6)"></div>
-                    <div class="cell" onclick="makeMove(7)"></div>
-                    <div class="cell" onclick="makeMove(8)"></div>
-                </div>
-                <div id="status">Turno de X</div>
-                <button id="button-reinicio" onclick=resetGame()>Reiniciar</button>
-                <!-- CREAR ALGO QUE SI GANAS HACE UN SONIDO DE GANADOR Y CUANDO MUEVES ALGO UN SONIDO COMO DE 
-                 MOVIENDO PIEZAS O ALGO -->
-            </div>
-        </section>
 
-        <section id="contador_miaus">
-            <!--HACERLO MAS BONITO CON CSS-->
-            <div class="container-fluid col-md-12 d-flex flex-column align-items-center text-center mt-5 pt-4">
-                <h1>Contador Interactivo</h1>
-                <div class="col-md-6">
-                    <img id="selector-img" class="imagen-contador" src="images/gato_contador2.png" alt="gatito">
-                </div>
-                <div class="col-md-6 counter">
-                    <p id="count">0</p>
-                </div>
-                <div>
-                    <button onclick=dec()>Restar</button>
-                    <button onclick=inc()>Sumar</button>
-                </div>
-                <div class="clicks">
-                    <p>Clicks apretados en Suma: <span id="incCount">0</span></p>
-                    <p>Clicks apretados en Resta: <span id="decCount">0</span></p>
-                </div>
-            </div>
-        </section>
+    <main class="container mt-5 pt-5">
+        <header class="text-center mb-5">
+            <h1 class="display-5 fw-bold">Plataforma de Juegos Interactivos</h1>
+        </header>
 
-        <section id="adivina_numero">
-            <div id="recuadro" class="container-fluid col-md-12 d-flex flex-column align-items-center text-center mt-5 pt-4">
-                <h1>Adivina el numero del 1 al 100</h1>
-                <div class="form">
-                    <label for="guessField">Enter a guess: </label>
-                    <input type="number" min="1" max="100" required id="guessField" class="guessField">
-                    <input type="submit" value="Submit guess" class="guessSubmit">
-                </div>
-
-                <div class="resultParas">
-                    <p class="guesses"></p>
-                    <p class="lastResult"></p>
-                    <p class="lowOrHi"></p>
-                </div>
-            </div>
-        </section>
-
-        <section id="cachipun"> 
-            <div class="container-fluid col-md-12 d-flex flex-column align-items-center text-center mt-5 pt-4">
-                <h1>Piedra Papel o Tijeras</h1>
-                <h4>Escoge:</h4>
-                <div class="col">
-                    <button class="choiceBtn botonppt">Piedra</button>
-                    <button class="choiceBtn botonppt">Papel</button>
-                    <button class="choiceBtn botonppt">Tijera</button>
-                </div>
-                <div class="mt-4">
-                    <p id="inputText">Tu jugada: -</p>
-                    <p id="computerText">Tu contrincante: -</p>
-                    <h4 id="resultText" class="mt-2">-</h4>
-                </div>
-            </div>
-        </section>
-
-        <section id="reaction">
-            <div class="container-fluid col-md-12 d-flex flex-column align-items-center text-center mt-5 pt-4">
-                <h1>Juego de Reacción</h1>
-                <h4>Apreta Parar cuando la imagen cambie</h4>
-                <div class="col result">
-                    <div id="timer-display" style="font-size: 3em; font-family: monospace;">10.00</div>
-                    <div><img id="reaction_img" class="imagen-contador" src="images/gato_contador1.png" alt="gato"></div>
-                    <div class="mt-3">
-                        <button id="start-btn" class="btn btn-primary" onclick="iniciarCuentaAtras()">INICIAR</button>
-                        <button class="btn btn-danger" onclick="stopTime()">PARAR</button>
-                        <button class="btn btn-warning text-white" onclick="resetReactionGame()">REINICIAR</button>
+        <div class="row g-4">
+            <section id="contador" class="col-md-6 col-lg-4">
+                <article class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h2 class="h5 card-title">1. Contador Interactivo</h2>
+                        <img id="selector-img" src="images/gato_contador1.png" alt="Gato contador" class="my-3" style="height: 60px;">
+                        <p class="display-6" id="count">0</p>
+                        <button class="btn btn-sm btn-outline-danger" onclick="decrementCounter()">Restar</button>
+                        <button class="btn btn-sm btn-outline-success" onclick="incrementCounter()">Sumar</button>
+                        <div class="mt-2 small text-muted">Suma: <span id="incCount">0</span> | Resta: <span id="decCount">0</span></div>
                     </div>
-                    <div class="row mt-4">
-                        <div class="col">
-                            <h4 id="result" class="p-3 rounded text-white" style="min-height: 50px;">-</h4>
+                </article>
+            </section>
+
+            <section id="adivina" class="col-md-6 col-lg-4">
+                <article class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h2 class="h5 card-title">2. Adivina el Número</h2>
+                        <p class="small text-muted">1 al 100 | Máximo 7 intentos</p>
+                        <input type="number" id="guessField" class="form-control mb-2 text-center" placeholder="Tu número">
+                        <button class="btn btn-primary w-100 btn-sm" onclick="checkGuess()">Enviar</button>
+                        <div class="mt-2 small"><span class="lastResult badge"></span> <span class="lowOrHi d-block"></span></div>
+                    </div>
+                </article>
+            </section>
+
+            <section id="ppt" class="col-md-6 col-lg-4">
+                <article class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h2 class="h5 card-title">3. Piedra, Papel o Tijera</h2>
+                        <div class="btn-group w-100 mb-3">
+                            <button class="btn btn-outline-primary btn-sm" onclick="playRPS('Piedra')">Piedra</button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="playRPS('Papel')">Papel</button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="playRPS('Tijeras')">Tijera</button>
+                        </div>
+                        <div class="small bg-light p-2 rounded">
+                            <div id="inputText">-</div>
+                            <div id="computerText">-</div>
+                            <div id="resultText" class="fw-bold mt-1">-</div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
+                </article>
+            </section>
 
-        <section id="Trivia">
-            <div class="container-fluid col-md-12 d-flex flex-column align-items-center text-center mt-5 pt-4">
-                <h1>Trivia</h1>
-                <h4>Constará de 5 preguntas:</h4>
-                <div id="trivia-container" class="card shadow p-4" style="max-width: 600px; width: 100%;">
-                    <div id="quiz">
-                        <h4 id="pregunta-texto">Cargando pregunta...</h4>
-                        <div id="opciones" class="d-grid gap-2 mt-3"></div>
+            <section id="reaccion" class="col-md-6 col-lg-4">
+                <article class="card h-100 shadow-sm border-0 bg-dark text-white">
+                    <div class="card-body text-center">
+                        <h2 class="h5 card-title">4. Juego de Reacción</h2>
+                        <div id="reaction-area" class="bg-secondary rounded my-3 d-flex align-items-center justify-content-center" style="height: 100px; cursor: pointer;" onclick="handleReactionClick()">
+                            Pulsa para Iniciar
+                        </div>
+                        <p id="reaction-result" class="small">-</p>
                     </div>
-                    <div id="trivia-resultado" class="d-none">
-                        <h3>Juego Terminado</h3>
-                        <p id="puntaje-final"></p>
-                        <button class="btn btn-primary" onclick="reiniciarTrivia()">Jugar de nuevo</button>
+                </article>
+            </section>
+
+            <section id="trivia" class="col-md-6 col-lg-4">
+                <article class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h2 class="h5 card-title">5. Trivia</h2>
+                        <div id="quiz-container">
+                            <p id="pregunta-texto" class="small fw-bold">Cargando...</p>
+                            <div id="opciones" class="d-grid gap-1"></div>
+                        </div>
+                        <div id="trivia-res" class="d-none small"></div>
                     </div>
-                </div>
-            </div>
-        </section>
+                </article>
+            </section>
 
-        <section id="preguntas_tiempo">
-            <div class="container-fluid col-md-12 d-flex flex-column align-items-center text-center mt-5 pt-4">
-                <h1>Trivia Relámpago</h1>
-                <div id="trivia-container" class="card shadow p-4" style="max-width: 600px; width: 100%;">
-                    <div id="trivia-timer-cont" class="mb-3 row-md-4" style="font-size: 1.5rem; font-weight: bold; color: #dc3545;">
-                        Tiempo: <span id="tiempo-restante-t">5</span>s
+            <section id="reflejos" class="col-md-6 col-lg-4">
+                <article class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h2 class="h5 card-title">6. Juego de Reflejos</h2>
+                        <div id="area-reflejos" class="bg-light position-relative overflow-hidden mb-2" style="height: 120px;">
+                            <div id="objetivo" class="bg-danger rounded-circle position-absolute" style="width: 30px; height: 30px; cursor: pointer; display: none;" onclick="catchReflex()"></div>
+                        </div>
+                        <button class="btn btn-dark btn-sm w-100" onclick="startReflex()">Iniciar</button>
+                        <div class="small mt-1">Puntos: <span id="reflejos-score">0</span></div>
                     </div>
-                    <div id="trivia-inicio-cont" class="mb-3 row-md-4">
-                        <button class="btn btn-primary" onclick="iniciarTrivia()">Iniciar Tiempo</button>
+                </article>
+            </section>
+
+            <section id="#t-trivia" class="col-md-6 col-lg-4">
+                <article class="card h-100 shadow-sm border-0 bg-light">
+                    <div class="card-body text-center">
+                        <h2 class="h5 card-title">7. Preguntas Rápidas</h2>
+                        <div id="t-timer" class="badge bg-danger mb-2">5s</div>
+                        <div id="t-quiz-area" class="d-none">
+                            <p id="t-pregunta" class="small fw-bold"></p>
+                            <div id="t-opciones" class="d-grid gap-1"></div>
+                        </div>
+                        <button id="btn-iniciar-t" class="btn btn-primary btn-sm" onclick="startTimedTrivia()">Iniciar</button>
                     </div>
-                    <div id="quiz-area">
-                        <h4 id="pregunta-texto-t">Cargando pregunta...</h4>
-                        <div id="opciones-t" class="d-grid gap-2 mt-3"></div>
+                </article>
+            </section>
+
+            <section id="gato" class="col-md-6 col-lg-4">
+                <article class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h2 class="h5 card-title">8. Tic Tac Toe</h2>
+                        <div class="gato-grid mx-auto mb-2" style="display: grid; grid-template-columns: repeat(3, 1fr); width: 120px;">
+                            <div class="border p-2 cell" onclick="makeMove(0)" style="height: 40px; cursor: pointer;"></div>
+                            <div class="border p-2 cell" onclick="makeMove(1)" style="height: 40px; cursor: pointer;"></div>
+                            <div class="border p-2 cell" onclick="makeMove(2)" style="height: 40px; cursor: pointer;"></div>
+                            <div class="border p-2 cell" onclick="makeMove(3)" style="height: 40px; cursor: pointer;"></div>
+                            <div class="border p-2 cell" onclick="makeMove(4)" style="height: 40px; cursor: pointer;"></div>
+                            <div class="border p-2 cell" onclick="makeMove(5)" style="height: 40px; cursor: pointer;"></div>
+                            <div class="border p-2 cell" onclick="makeMove(6)" style="height: 40px; cursor: pointer;"></div>
+                            <div class="border p-2 cell" onclick="makeMove(7)" style="height: 40px; cursor: pointer;"></div>
+                            <div class="border p-2 cell" onclick="makeMove(8)" style="height: 40px; cursor: pointer;"></div>
+                        </div>
+                        <div id="status" class="small mb-1">Turno de X</div>
+                        <button class="btn btn-link btn-sm p-0" onclick="resetGame()">Reiniciar</button>
                     </div>
+                </article>
+            </section>
 
-                    <div id="trivia-resultado-t" class="d-none">
-                        <h3>Juego Terminado</h3>
-                        <p id="puntaje-final-t"></p>
-                        <button class="btn btn-primary" onclick="reiniciarTriviaT()">Intentar de nuevo</button>
+            <section id="snake" class="col-md-6 col-lg-4">
+                <article class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h2 class="h5 card-title">9. Snake</h2>
+                        <canvas id="snakeCanvas" width="150" height="150" class="bg-dark d-block mx-auto mb-2"></canvas>
+                        <button class="btn btn-success btn-sm w-100" onclick="startSnake()">Jugar</button>
                     </div>
-                </div>
-            </div>
-        </section>
-        <section id="snake">
-            <div class="container-fluid col-md-12 d-flex flex-column align-items-center text-center mt-5 pt-4">
-                <h1>Snake Game</h1>
-                <div id="snake-inicio-cont" class="mb-3">
-                    <button class="btn btn-primary" onclick="iniciarSnake()" href="#ver_snake">Jugar Snake</button>
-                </div>
-                
-                <canvas id="snakeCanvas" width="400" height="400" style="background-color: #000; border: 5px solid #333;" class="d-none"></canvas>
-                
-                <div id="snake-ui" class="mt-3 d-none">
-                    <h4>Puntaje: <span id="snake-score">0</span></h4>
-                    <button id="ver_snake" class="btn btn-danger btn-sm" onclick="detenerSnake()">Detener</button>
-                </div>
-            </div>
-        </section>
-    
-        <section id="reflejos">
-            <div class="container-fluid col-md-12 d-flex flex-column align-items-center text-center mt-5 pt-4">
-                <h1>Juego de Reflejos</h1>
-                <p>Haz clic en la imagen lo más rápido que puedas</p>
-                
-                <div id="reflejos-inicio-cont">
-                    <button class="btn btn-primary" onclick="iniciarReflejos()">Iniciar Juego</button>
-                </div>
+                </article>
+            </section>
 
-                <div id="area-juego-reflejos" class="d-none" style="width: 100%; max-width: 600px; height: 400px; background: #222; position: relative; overflow: hidden; border-radius: 15px; border: 3px solid #444;">
-                    <div id="objetivo" onclick="atrapado()" style="position: absolute; cursor: pointer; transition: all 0.2s ease;">
-                        <img id="img-reflejo" src="" alt="objetivo" class="rounded-circle" style="width: 60px; height: 60px; border: 2px solid white;">
+            <section id="topo" class="col-md-6 col-lg-4">
+                <article class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h2 class="h5 card-title">10. Whack-a-Mole</h2>
+                        <div class="mole-grid mx-auto mb-2" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 150px;">
+                            <div class="hole bg-secondary rounded-circle" style="height: 45px; cursor: pointer;" onclick="hitMole(0)"></div>
+                            <div class="hole bg-secondary rounded-circle" style="height: 45px; cursor: pointer;" onclick="hitMole(1)"></div>
+                            <div class="hole bg-secondary rounded-circle" style="height: 45px; cursor: pointer;" onclick="hitMole(2)"></div>
+                            <div class="hole bg-secondary rounded-circle" style="height: 45px; cursor: pointer;" onclick="hitMole(3)"></div>
+                            <div class="hole bg-secondary rounded-circle" style="height: 45px; cursor: pointer;" onclick="hitMole(4)"></div>
+                            <div class="hole bg-secondary rounded-circle" style="height: 45px; cursor: pointer;" onclick="hitMole(5)"></div>
+                        </div>
+                        <button class="btn btn-warning btn-sm w-100" onclick="startWhack()">Iniciar</button>
+                        <div class="small mt-1">Puntos: <span id="mole-score">0</span></div>
                     </div>
-                </div>
-
-                <div id="reflejos-ui" class="mt-3 d-none">
-                    <h4>Puntaje: <span id="reflejos-score">0</span></h4>
-                    <button class="btn btn-danger btn-sm" onclick="detenerReflejos()">Detener</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="golpea_topo">
-            <div class="container-fluid col-md-12 d-flex flex-column align-items-center text-center mt-5 pt-4">
-                <h1>Whack-a-Mole</h1>
-                <p>¡Golpea al topo antes de que se esconda!</p>
-                
-                <div id="mole-inicio-cont">
-                    <button class="btn btn-primary" onclick="iniciarWhack()">Iniciar Partida</button>
-                </div>
-
-                <div class="whack-grid mt-3">
-                    <div class="hole" id="hole0"></div>
-                    <div class="hole" id="hole1"></div>
-                    <div class="hole" id="hole2"></div>
-                    <div class="hole" id="hole3"></div>
-                    <div class="hole" id="hole4"></div>
-                    <div class="hole" id="hole5"></div>
-                    <div class="hole" id="hole6"></div>
-                    <div class="hole" id="hole7"></div>
-                    <div class="hole" id="hole8"></div>
-                </div>
-
-                <div id="whack-ui" class="mt-3 d-none">
-                    <h4>Puntaje: <span id="whack-score">0</span></h4>
-                    <button class="btn btn-danger btn-sm" onclick="detenerWhack()">Detener</button>
-                </div>
-            </div>
-        </section>
+                </article>
+            </section>
+        </div>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <footer class="bg-white py-4 mt-5 border-top">
+        <div class="container text-center">
+            <p class="text-muted small mb-0">Gracias por jugar a mis jueguitos :></p>
+        </div>
+    </footer>
+
     <script src="app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

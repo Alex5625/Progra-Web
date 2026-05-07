@@ -1,770 +1,461 @@
-//JAVASCRIPT PARA EL TIC TAC TOE
-let board = Array(9).fill(null);
-let currentPlayer = 'X';
-let gameActive = true;
+// ==========================================
+// TALLER EVALUADO JS - ICB GAMES
+// ==========================================
 
-function makeMove(index) {
-    if (!board[index] && gameActive) {
-        board[index] = currentPlayer;
-        document.getElementsByClassName('cell')[index].innerText = currentPlayer;
-        const clickSound = new Audio('sounds/sonido_tablero.mp3');
-        clickSound.play().catch(e => console.log("Audio de clic bloqueado:", e));
+// --- 1. CONTADOR INTERACTIVO ---
+let countValue = 0;
+let increments = 0;
+let decrements = 0;
 
-        checkResult();
-        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-        if(gameActive) document.getElementById('status').innerText = `Turno de ${currentPlayer}`;
-    }
+function updateCounter() {
+    document.getElementById('count').textContent = countValue;
+    document.getElementById('incCount').textContent = increments;
+    document.getElementById('decCount').textContent = decrements;
+    // Interacción visual del gato
+    document.getElementById('selector-img').src = (countValue % 2 === 0) ? 'images/gato_contador1.png' : 'images/gato_contador2.png';
 }
 
-function checkResult() {
-    const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-    for (let win of wins) {
-        if (board[win[0]] && board[win[0]] === board[win[1]] && board[win[0]] === board[win[2]]) {
-            document.getElementById('status').innerText = `¡${board[win[0]]} gana!`;
-            gameActive = false;
-            const clickSound = new Audio('sounds/victory.mp3');
-            clickSound.play().catch(e => console.log("Audio de clic bloqueado:", e));
-            return;
-        }
-    }
-    if (!board.includes(null)) {
-        document.getElementById('status').innerText = "¡Empate!";
-        gameActive = false;
-    }
+function incrementCounter() {
+    countValue = (countValue >= 10) ? 0 : countValue + 1; 
+    increments++;
+    new Audio('sounds/bongo1.mp3').play().catch(() => {});
+    updateCounter();
 }
 
-function resetGame() {
-    board.fill(null);
-    document.querySelectorAll('.cell').forEach(cell => cell.innerText = '');
-    currentPlayer = 'X';
-    gameActive = true;
-    document.getElementById('status').innerText = "Turno de X";
+function decrementCounter() {
+    countValue = (countValue > 0) ? countValue - 1 : 0;
+    decrements++;
+    new Audio('sounds/bongo2.mp3').play().catch(() => {});
+    updateCounter();
 }
 
-//JAVASCRIPT PARA EL CONTADOR INTERACTIVO
 
-let c = 0;
-let ci = 0;
-let cd = 0;
-let cambio = true;
-
-function inc() {
-    c = (c >= 10) ? 0 : c + 1; 
-    ci = (ci >= 10) ? 0 : ci + 1; 
-    const clickSound = new Audio('sounds/bongo1.mp3');
-    clickSound.play().catch(e => console.log("Audio de clic bloqueado:", e));
-    update();
-}
-
-function dec() {
-    c = c > 0 ? c - 1 : 0; 
-    cd = (cd >= 10) ? 0 : cd + 1; 
-    const clickSound = new Audio('sounds/bongo2.mp3');
-    clickSound.play().catch(e => console.log("Audio de clic bloqueado:", e));
-    update();
-}
-
-function update() {
-    incCount.textContent = ci; 
-    decCount.textContent = cd; 
-    count.textContent = c;    
-    if (cambio) {
-        document.getElementById('selector-img').src = 'images/gato_contador1.png'
-        cambio = false;
-    } else {
-        document.getElementById('selector-img').src = 'images/gato_contador2.png'
-        cambio = true
-    }
-}
-
-//adivinar el numero
-
-let randomNumber = Math.floor(Math.random() * 100) + 1;
-const guesses = document.querySelector('.guesses');
-const lastResult = document.querySelector('.lastResult');
-const lowOrHi = document.querySelector('.lowOrHi');
-const guessSubmit = document.querySelector('.guessSubmit');
-const guessField = document.querySelector('.guessField');
-let guessCount = 1;
-let resetButton;
+// --- 2. ADIVINA EL NÚMERO (Límite 5 intentos) ---
+let secretNum = Math.floor(Math.random() * 100) + 1;
+let guessAttempts = 0;
+const maxAttempts = 7;
 
 function checkGuess() {
-    const userGuess = Number(guessField.value);
-    if (guessCount === 1) {
-        guesses.textContent = 'Previous guesses: ';
-    }
+    const input = document.getElementById('guessField');
+    const userGuess = Number(input.value);
+    const resultMsg = document.querySelector('.lastResult');
+    const lowOrHi = document.querySelector('.lowOrHi');
 
-    guesses.textContent = `${guesses.textContent} ${userGuess}`;
+    if (!userGuess || userGuess < 1 || userGuess > 100) return;
 
-    if (userGuess === randomNumber) {
-        lastResult.textContent = 'Congratulations! You got it right!';
-        lastResult.style.backgroundColor = 'green';
+    guessAttempts++;
+
+    if (userGuess === secretNum) {
+        resultMsg.textContent = '¡Felicidades! ¡Adivinaste!';
+        resultMsg.className = 'lastResult badge bg-success';
         lowOrHi.textContent = '';
-        setGameOver();
-    } else if (guessCount === 10) {
-        lastResult.textContent = '!!!GAME OVER!!!';
+        endGuessGame();
+    } else if (guessAttempts >= maxAttempts) {
+        resultMsg.textContent = '¡Fin! El número era ' + secretNum;
+        resultMsg.className = 'lastResult badge bg-danger';
         lowOrHi.textContent = '';
-        setGameOver();
+        endGuessGame();
     } else {
-        lastResult.textContent = 'Wrong!';
-        lastResult.style.backgroundColor = 'red';
-        if(userGuess < randomNumber) {
-        lowOrHi.textContent = 'Last guess was too low!' ;
-        } else if(userGuess > randomNumber) {
-        lowOrHi.textContent = 'Last guess was too high!';
-        }
+        resultMsg.textContent = 'Incorrecto. Intentos restantes: ' + (maxAttempts - guessAttempts);
+        resultMsg.className = 'lastResult badge bg-warning text-dark';
+        lowOrHi.textContent = userGuess < secretNum ? 'El número es más ALTO' : 'El número es más BAJO';
     }
 
-    guessCount++;
-    guessField.value = '';
-    guessField.focus();
+    input.value = '';
+    input.focus();
 }
 
-guessSubmit.addEventListener('click', checkGuess);
-
-
-const contenedor = document.getElementById('recuadro')
-
-function setGameOver() {
-    guessField.disabled = true;
-    guessSubmit.disabled = true;
-    resetButton = document.createElement('button');
-    resetButton.textContent = 'Start new game';
-    contenedor.appendChild(resetButton);
-    resetButton.addEventListener('click', resetGame_number);
-}
-
-function resetGame_number() {
-    guessCount = 1;
-    const resetParas = document.querySelectorAll('.resultParas p');
-    for (const resetPara of resetParas) {
-        resetPara.textContent = '';
-    }
-
-    resetButton.parentNode.removeChild(resetButton);
-    guessField.disabled = false;
-    guessSubmit.disabled = false;
-    guessField.value = '';
-    guessField.focus();
-    lastResult.style.backgroundColor = 'white';
-    randomNumber = Math.floor(Math.random() * 100) + 1;
+function endGuessGame() {
+    document.getElementById('guessField').disabled = true;
+    document.querySelector('button[onclick="checkGuess()"]').disabled = true;
 }
 
 
-// piedra, papel o tijeras
-// piedra, papel o tijeras
-document.addEventListener("DOMContentLoaded", () => {
-    piedrapapelotijeras();
-});
+// --- 3. PIEDRA, PAPEL O TIJERA ---
+function playRPS(playerChoice) {
+    const choices = ["Piedra", "Papel", "Tijeras"];
+    const computerChoice = choices[Math.floor(Math.random() * 3)];
+    let result = "";
 
-function piedrapapelotijeras() {
-    const jugadorText = document.querySelector("#inputText");
-    const compuText = document.querySelector("#computerText");
-    const resultText = document.querySelector("#resultText");
-    const choiceBtns = document.querySelectorAll(".choiceBtn");
-    let player;
-    let computer;
+    new Audio('sounds/click.mp3').play().catch(() => {});
 
-    choiceBtns.forEach(button => button.addEventListener("click", () => {
-        // 1. Sonido al presionar el botón (interacción del usuario)
-        const clickSound = new Audio('sounds/click.mp3');
-        clickSound.play().catch(e => console.log("Audio de clic bloqueado:", e));
-
-        player = button.textContent;
-        computerTurn();
-        jugadorText.textContent = "Tu jugada: " + player;
-        compuText.textContent = "Tu contrincante: " + computer;
-        
-        // Determinar el resultado
-        const resultado = ganador();
-        resultText.textContent = resultado;
-
-        // 2. Sonido dependiendo del resultado de la partida
-        let resultSound;
-        if (resultado === "Ganaste") {
-            resultSound = new Audio('sounds/you_win.mp3');
-        } else if (resultado === "Perdiste") {
-            resultSound = new Audio('sounds/you_lose.mp3');
-        } 
-
-        resultSound.play().catch(e => console.log("Audio de resultado bloqueado:", e));
-    }));
-
-    function computerTurn() {
-        const randppt = Math.floor(Math.random() * 3) + 1;
-        switch(randppt) {
-            case 1:
-                computer = "Piedra";
-                break;
-            case 2:
-                computer = "Papel";
-                break;
-            case 3:
-                computer = "Tijeras";
-                break;
-        }
-    }
-
-    function ganador() {
-        if (player === computer) {
-            return "¡Empate!";
-        } else if (computer === "Piedra") {
-            return (player === "Papel") ? "Ganaste" : "Perdiste";
-        } else if (computer === "Papel") {
-            return (player === "Tijeras") ? "Ganaste" : "Perdiste";
-        } else if (computer === "Tijeras") {
-            return (player === "Piedra") ? "Ganaste" : "Perdiste";
-        }
-    }
-}
-
-
-
-// Cuenta atrás con milisegundos
-// Cuenta atrás con milisegundos
-let cuentaAtrasInterval;
-let tiempoEnSegundos = 0.00;
-let ganador = false;
-
-function iniciarCuentaAtras() {
-    const display = document.getElementById('timer-display');
-    const totalTimeMs = 10000; // 10 segundos
-    const startTime = Date.now();
-
-    document.getElementById('start-btn').disabled = true;
-
-    // Detener cualquier temporizador que ya esté corriendo antes de iniciar uno nuevo
-    if (cuentaAtrasInterval) {
-        clearInterval(cuentaAtrasInterval);
-    }
-
-    cuentaAtrasInterval = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        remaining = totalTimeMs - elapsed;
-
-        // Condición para detener el contador cuando llegue a cero
-        if (remaining <= 0) {
-            clearInterval(cuentaAtrasInterval);
-            display.textContent = "00.00";
-            return;
-        }
-
-        // Cálculos para separar los segundos de los milisegundos
-        const segundos = Math.floor(remaining / 1000);
-        const milisegundos = Math.floor((remaining % 1000) / 10); 
-
-        // Dar formato de dos dígitos
-        const displaySegundos = segundos < 10 ? '0' + segundos : segundos;
-        const displayMilisegundos = milisegundos < 10 ? '0' + milisegundos : milisegundos;
-
-        // Mostrar en el HTML
-        display.textContent = `${displaySegundos}.${displayMilisegundos}`;
-
-        tiempoEnSegundos = remaining / 1000;
-
-        // Comprobamos el rango de 5 a 5.15 segundos
-        if (tiempoEnSegundos >= 5.00 && tiempoEnSegundos <= 5.15) {
-            document.getElementById('reaction_img').src = 'images/gato_contador1.png';
-            ganador = true;
-        } else {
-            document.getElementById('reaction_img').src = 'images/gato_contador2.png';
-            ganador = false;
-        }
-    }, 10); // Actualiza cada 10 milisegundos
-}
-
-function stopTime() {
-    clearInterval(cuentaAtrasInterval);
-    const resultado = document.getElementById('result'); // Obtiene el elemento dinámicamente
-    if (ganador) {
-        const clickSound = new Audio('sounds/victory.mp3');
-        clickSound.play().catch(e => console.log("Audio de clic bloqueado:", e));
-        resultado.textContent = 'FELICIDADES, ¡LO LOGRASTE!';
-        resultado.style.backgroundColor = 'green';
+    if (playerChoice === computerChoice) {
+        result = "¡Empate!";
+    } else if (
+        (playerChoice === "Piedra" && computerChoice === "Tijeras") ||
+        (playerChoice === "Papel" && computerChoice === "Piedra") ||
+        (playerChoice === "Tijeras" && computerChoice === "Papel")
+    ) {
+        result = "¡Ganaste!";
+        new Audio('sounds/you_win.mp3').play().catch(() => {});
     } else {
-        const clickSound = new Audio('sounds/lose.mp3');
-        clickSound.play().catch(e => console.log("Audio de clic bloqueado:", e));
-        resultado.textContent = 'ERES MUY MALO';
-        resultado.style.backgroundColor = 'red';
+        result = "Perdiste";
+        new Audio('sounds/you_lose.mp3').play().catch(() => {});
     }
+
+    document.getElementById('inputText').textContent = `Tu jugada: ${playerChoice}`;
+    document.getElementById('computerText').textContent = `Computador: ${computerChoice}`;
+    document.getElementById('resultText').textContent = result;
+}
+
+
+// --- 4. JUEGO DE REACCIÓN ---
+let reactionStartTime;
+let reactionTimeout;
+
+function startReactionGame() {
+    const area = document.getElementById('reaction-area');
+    const result = document.getElementById('reaction-result');
     
+    area.className = "bg-danger rounded my-3 d-flex align-items-center justify-content-center text-white";
+    area.textContent = "Espera al Verde...";
+    result.textContent = "-";
+    reactionStartTime = null;
+    clearTimeout(reactionTimeout);
+    
+    const randomDelay = Math.floor(Math.random() * 3000) + 1500;
+    
+    reactionTimeout = setTimeout(() => {
+        area.className = "bg-success rounded my-3 d-flex align-items-center justify-content-center text-white";
+        area.textContent = "¡DALE CLIC!";
+        reactionStartTime = Date.now();
+    }, randomDelay);
 }
 
-function resetReactionGame() {
-    // Detiene el temporizador en caso de que esté corriendo
-    clearInterval(cuentaAtrasInterval);
+function handleReactionClick() {
+    const area = document.getElementById('reaction-area');
+    const result = document.getElementById('reaction-result');
 
-    // Restablece el valor inicial de las variables
-    tiempoEnSegundos = 0;
-    ganador = false;
-
-    // Restaura el texto del temporizador a 10.00
-    const display = document.getElementById('timer-display');
-    if (display) {
-        display.textContent = "10.00";
-    }
-
-    // Vuelve a la imagen inicial
-    const imgElement = document.getElementById('reaction_img');
-    if (imgElement) {
-        imgElement.src = 'images/gato_contador1.png';
-    }
-
-    // Limpia el recuadro de resultados y su color
-    const resultado = document.getElementById('result');
-    if (resultado) {
-        resultado.textContent = '-';
-        resultado.style.backgroundColor = 'transparent';
+    if (reactionStartTime) {
+        const reactionTime = Date.now() - reactionStartTime;
+        result.textContent = `Tu tiempo: ${reactionTime} ms`;
+        area.textContent = "¡Bien hecho! Pulsa Iniciar de nuevo.";
+        area.className = "bg-secondary rounded my-3 d-flex align-items-center justify-content-center text-white";
+        reactionStartTime = null;
+        new Audio('sounds/victory.mp3').play().catch(() => {});
+    } else if (area.textContent === "Espera al Verde...") {
+        clearTimeout(reactionTimeout);
+        result.textContent = "¡Muy pronto! Has fallado.";
+        area.textContent = "Pulsa Iniciar para reintentar";
+        area.className = "bg-secondary rounded my-3 d-flex align-items-center justify-content-center text-white";
+        new Audio('sounds/lose.mp3').play().catch(() => {});
+    } else {
+        startReactionGame();
     }
 }
 
-//Trivia 5 preguntas
 
-const preguntas = [
-    {
-        pregunta: "¿Qué lenguaje se usa para dar estilo a las páginas web?",
-        opciones: ["HTML", "CSS", "Python", "C++"],
-        correcta: 1 // Índice de 'CSS'
-    },
-    {
-        pregunta: "¿Cuál es la capital de Chile?",
-        opciones: ["Concepción", "Valparaíso", "Santiago", "Talca"],
-        correcta: 2
-    },
-    {
-        pregunta: "¿Qué significa CSS?",
-        opciones: ["Creative Style Sheets", "Cascading Style Sheets", "Computer Style System", "Control Style Sheet"],
-        correcta: 1
-    },
-    {
-        pregunta: "¿Cuál es el planeta más grande del sistema solar?",
-        opciones: ["Tierra", "Marte", "Júpiter", "Saturno"],
-        correcta: 2
-    },
-    {
-        pregunta: "¿En qué año se fundó la Universidad de Talca?",
-        opciones: ["1981", "1990", "1975", "1985"],
-        correcta: 0
-    }
+// --- 5. TRIVIA (Mínimo 5 preguntas) ---
+const quizData = [
+    { q: "¿Qué lenguaje se usa para dar estilo a las páginas web?", o: ["HTML", "CSS", "Python", "C++"], a: 1 },
+    { q: "¿Cuál es la capital de Chile?", o: ["Concepción", "Valparaíso", "Santiago", "Talca"], a: 2 },
+    { q: "¿Qué significa CSS?", o: ["Creative Style", "Cascading Style Sheets", "Computer System", "Control Sheet"], a: 1 },
+    { q: "¿Cuál es el planeta más grande?", o: ["Tierra", "Marte", "Júpiter", "Saturno"], a: 2 },
+    { q: "¿En qué año se fundó la Universidad de Talca?", o: ["1981", "1990", "1975", "1985"], a: 0 }
 ];
+let currentQuestion = 0;
+let quizScore = 0;
 
-let preguntaActual = 0;
-let puntaje = 0;
+function loadTrivia() {
+    if (currentQuestion >= quizData.length) {
+        document.getElementById('quiz-container').classList.add('d-none');
+        const res = document.getElementById('trivia-res');
+        res.classList.remove('d-none');
+        res.textContent = `Juego Terminado. Lograste ${quizScore} de ${quizData.length} puntos.`;
+        return;
+    }
 
-// Iniciar trivia al cargar
-document.addEventListener("DOMContentLoaded", () => {
-    mostrarPregunta();
-});
-
-function mostrarPregunta() {
-    const p = preguntas[preguntaActual];
-    document.getElementById("pregunta-texto").textContent = p.pregunta;
-    const contenedorOpciones = document.getElementById("opciones");
-    contenedorOpciones.innerHTML = ""; // Limpiar botones anteriores
-
-    p.opciones.forEach((opcion, index) => {
-        const boton = document.createElement("button");
-        boton.textContent = opcion;
-        boton.className = "btn btn-outline-secondary";
-        boton.onclick = () => validarRespuesta(index);
-        contenedorOpciones.appendChild(boton);
+    const q = quizData[currentQuestion];
+    document.getElementById('pregunta-texto').textContent = q.q;
+    const optsContainer = document.getElementById('opciones');
+    optsContainer.innerHTML = '';
+    
+    q.o.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.className = "btn btn-outline-secondary btn-sm";
+        btn.textContent = opt;
+        btn.onclick = () => {
+            if (index === q.a) {
+                quizScore++;
+                new Audio('sounds/victory.mp3').play().catch(() => {});
+            } else {
+                new Audio('sounds/lose.mp3').play().catch(() => {});
+            }
+            currentQuestion++;
+            loadTrivia();
+        };
+        optsContainer.appendChild(btn);
     });
 }
+document.addEventListener("DOMContentLoaded", loadTrivia);
 
-function validarRespuesta(indiceSeleccionado) {
-    if (indiceSeleccionado === preguntas[preguntaActual].correcta) {
-        puntaje++;
-        // Sonido opcional de acierto (puedes usar el de victoria del gato)
-        new Audio('sounds/victory.mp3').play().catch(e => {});
-    } else {
-        // Sonido opcional de error (puedes usar el de lose de reacción)
-        new Audio('sounds/lose.mp3').play().catch(e => {});
+
+// --- 6. JUEGO DE REFLEJOS ---
+let reflexScore = 0;
+let reflexInterval;
+
+function startReflex() {
+    reflexScore = 0;
+    document.getElementById('reflejos-score').textContent = reflexScore;
+    document.getElementById('objetivo').style.display = 'block';
+    clearInterval(reflexInterval);
+    moverReflex();
+    reflexInterval = setInterval(moverReflex, 1200);
+}
+
+function moverReflex() {
+    const area = document.getElementById('area-reflejos');
+    const obj = document.getElementById('objetivo');
+    
+    const maxX = area.clientWidth - obj.clientWidth;
+    const maxY = area.clientHeight - obj.clientHeight;
+    
+    obj.style.left = Math.floor(Math.random() * maxX) + 'px';
+    obj.style.top = Math.floor(Math.random() * maxY) + 'px';
+}
+
+function catchReflex() {
+    reflexScore += 10;
+    document.getElementById('reflejos-score').textContent = reflexScore;
+    new Audio('sounds/bongo1.mp3').play().catch(() => {});
+    clearInterval(reflexInterval);
+    moverReflex();
+    reflexInterval = setInterval(moverReflex, 1200); 
+}
+
+
+// --- 7. TRIVIA CON TEMPORIZADOR ---
+let tQuestionIndex = 0;
+let tScore = 0;
+let tTimerInterval;
+let tTimeLeft = 5;
+
+function startTimedTrivia() {
+    tQuestionIndex = 0;
+    tScore = 0;
+    document.getElementById('btn-iniciar-t').classList.add('d-none');
+    document.getElementById('t-quiz-area').classList.remove('d-none');
+    loadTimedTrivia();
+}
+
+function loadTimedTrivia() {
+    if (tQuestionIndex >= quizData.length) {
+        clearInterval(tTimerInterval);
+        document.getElementById('t-quiz-area').classList.add('d-none');
+        document.getElementById('t-timer').textContent = "Fin";
+        const btn = document.getElementById('btn-iniciar-t');
+        btn.classList.remove('d-none');
+        btn.textContent = `Puntaje Final: ${tScore}. Jugar de nuevo`;
+        return;
     }
 
-    preguntaActual++;
-
-    if (preguntaActual < preguntas.length) {
-        mostrarPregunta();
-    } else {
-        mostrarResultados();
-    }
-}
-
-function mostrarResultados() {
-    document.getElementById("quiz").classList.add("d-none");
-    const resDiv = document.getElementById("trivia-resultado");
-    resDiv.classList.remove("d-none");
-    document.getElementById("puntaje-final").textContent = `Lograste ${puntaje} de ${preguntas.length} puntos.`;
-}
-
-function reiniciarTrivia() {
-    preguntaActual = 0;
-    puntaje = 0;
-    document.getElementById("quiz").classList.remove("d-none");
-    document.getElementById("trivia-resultado").classList.add("d-none");
-    mostrarPregunta();
-}
-
-// --- LÓGICA DE TRIVIA CON TEMPORIZADOR ---
-
-let preguntaActualT = 0;
-let puntajeT = 0;
-let intervaloTriviaT; 
-let segundosRestantesT = 5;
-
-
-
-function iniciarTrivia() {
-    // Reiniciamos valores por si el usuario ya jugó antes
-    preguntaActualT = 0;
-    puntajeT = 0;
+    const q = quizData[tQuestionIndex];
+    document.getElementById('t-pregunta').textContent = q.q;
+    const optsContainer = document.getElementById('t-opciones');
+    optsContainer.innerHTML = '';
     
-    // Mostramos el área de juego y ocultamos el resultado previo si existiera
-    document.getElementById("trivia-inicio-cont").classList.add("d-none");
-    document.getElementById("quiz-area").classList.remove("d-none");
-    document.getElementById("trivia-timer-cont").classList.remove("d-none");
-    document.getElementById("trivia-resultado-t").classList.add("d-none");
+    q.o.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.className = "btn btn-outline-primary btn-sm";
+        btn.textContent = opt;
+        btn.onclick = () => handleTimedAnswer(index === q.a);
+        optsContainer.appendChild(btn);
+    });
 
-    // Iniciamos la primera pregunta
-    mostrarPreguntaT();
+    startTimer();
 }
 
-function iniciarRelojTriviaT() {
-    segundosRestantesT = 5;
-    document.getElementById("tiempo-restante-t").textContent = segundosRestantesT;
+function startTimer() {
+    tTimeLeft = 5;
+    document.getElementById('t-timer').textContent = tTimeLeft + "s";
+    clearInterval(tTimerInterval);
     
-    clearInterval(intervaloTriviaT);
-    
-    intervaloTriviaT = setInterval(() => {
-        segundosRestantesT--;
-        document.getElementById("tiempo-restante-t").textContent = segundosRestantesT;
-        
-        if (segundosRestantesT <= 0) {
-            clearInterval(intervaloTriviaT);
-            validarRespuestaT(-1); // Tiempo agotado
+    tTimerInterval = setInterval(() => {
+        tTimeLeft--;
+        document.getElementById('t-timer').textContent = tTimeLeft + "s";
+        if (tTimeLeft <= 0) {
+            handleTimedAnswer(false);
         }
     }, 1000);
 }
 
-function mostrarPreguntaT() {
-    const p = preguntas[preguntaActualT];
-    document.getElementById("pregunta-texto-t").textContent = p.pregunta;
-    const contenedor = document.getElementById("opciones-t");
-    contenedor.innerHTML = "";
-
-    p.opciones.forEach((opcion, index) => {
-        const boton = document.createElement("button");
-        boton.textContent = opcion;
-        boton.className = "btn btn-outline-secondary";
-        boton.onclick = () => {
-            clearInterval(intervaloTriviaT);
-            validarRespuestaT(index);
-        };
-        contenedor.appendChild(boton);
-    });
-
-    iniciarRelojTriviaT();
-}
-
-function validarRespuestaT(indice) {
-    clearInterval(intervaloTriviaT);
-
-    if (indice === preguntas[preguntaActualT].correcta) {
-        puntajeT++;
-        new Audio('sounds/victory.mp3').play().catch(e => {});
+function handleTimedAnswer(isCorrect) {
+    clearInterval(tTimerInterval);
+    if (isCorrect) {
+        tScore++;
+        new Audio('sounds/victory.mp3').play().catch(() => {});
     } else {
-        new Audio('sounds/lose.mp3').play().catch(e => {});
+        new Audio('sounds/lose.mp3').play().catch(() => {});
     }
+    tQuestionIndex++;
+    loadTimedTrivia();
+}
 
-    preguntaActualT++;
 
-    setTimeout(() => {
-        if (preguntaActualT < preguntas.length) {
-            mostrarPreguntaT();
+// --- 8. TIC TAC TOE (Gato) ---
+let tictacBoard = Array(9).fill(null);
+let tictacPlayer = 'X';
+let tictacActive = true;
+
+function makeMove(index) {
+    if (!tictacBoard[index] && tictacActive) {
+        tictacBoard[index] = tictacPlayer;
+        document.querySelectorAll('.cell')[index].textContent = tictacPlayer;
+        new Audio('sounds/sonido_tablero.mp3').play().catch(() => {});
+
+        if (checkTicTacWinner()) {
+            document.getElementById('status').textContent = `¡${tictacPlayer} Gana!`;
+            tictacActive = false;
+            new Audio('sounds/victory.mp3').play().catch(() => {});
+        } else if (!tictacBoard.includes(null)) {
+            document.getElementById('status').textContent = "¡Empate!";
+            tictacActive = false;
         } else {
-            finalizarTriviaT();
+            tictacPlayer = tictacPlayer === 'X' ? 'O' : 'X';
+            document.getElementById('status').textContent = `Turno de ${tictacPlayer}`;
         }
-    }, 500);
+    }
 }
 
-function finalizarTriviaT() {
-    clearInterval(intervaloTriviaT);
-    document.getElementById("quiz-area").classList.add("d-none");
-    document.getElementById("trivia-timer-cont").classList.add("d-none");
-    const resDiv = document.getElementById("trivia-resultado-t");
-    resDiv.classList.remove("d-none");
-    document.getElementById("puntaje-final-t").textContent = `Lograste ${puntajeT} de ${preguntas.length} puntos.`;
+function checkTicTacWinner() {
+    const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    return wins.some(w => tictacBoard[w[0]] && tictacBoard[w[0]] === tictacBoard[w[1]] && tictacBoard[w[0]] === tictacBoard[w[2]]);
 }
 
-function reiniciarTriviaT() {
-    preguntaActualT = 0;
-    puntajeT = 0;
-    document.getElementById("quiz-area").classList.remove("d-none");
-    document.getElementById("trivia-timer-cont").classList.remove("d-none");
-    document.getElementById("trivia-resultado-t").classList.add("d-none");
-    document.getElementById("trivia-inicio-cont").classList.add("d-none");
-    mostrarPreguntaT();
+function resetGame() {
+    tictacBoard.fill(null);
+    document.querySelectorAll('.cell').forEach(cell => cell.textContent = '');
+    tictacPlayer = 'X';
+    tictacActive = true;
+    document.getElementById('status').textContent = "Turno de X";
 }
 
-// --- LÓGICA DEL JUEGO SNAKE ---
 
+// --- 9. SNAKE ---
 const canvas = document.getElementById("snakeCanvas");
 const ctx = canvas ? canvas.getContext("2d") : null;
 let snakeInterval;
-let snake = [{x: 10, y: 10}];
-let comida = {x: 15, y: 15};
-let dx = 0;
-let dy = 0;
-let tamanoGrilla = 20;
-let puntajeSnake = 0;
-let cambiandoDireccion = false;
+let snake = [];
+let comida = {};
+let dx = 0, dy = 0;
+const gridSize = 10;
+let snakeActive = false;
 
-function iniciarSnake() {
-    // UI
-    document.getElementById("snake-inicio-cont").classList.add("d-none");
-    document.getElementById("snakeCanvas").classList.remove("d-none");
-    document.getElementById("snake-ui").classList.remove("d-none");
-
-    // Estado inicial
-    snake = [{x: 10, y: 10}];
-    generarComida();
-    dx = 1; dy = 0; // Empieza moviéndose a la derecha
-    puntajeSnake = 0;
-    document.getElementById("snake-score").textContent = puntajeSnake;
-
+function startSnake() {
     if (snakeInterval) clearInterval(snakeInterval);
-    snakeInterval = setInterval(buclePrincipal, 100); // Velocidad del juego (100ms)
+    snake = [{x: 5, y: 5}];
+    dx = 1; dy = 0;
+    snakeActive = true;
+    placeComida();
+    snakeInterval = setInterval(updateSnake, 150);
 }
 
-function buclePrincipal() {
-    if (finDelJuego()) {
-        clearInterval(snakeInterval);
-        alert("Juego Terminado. Puntaje: " + puntajeSnake);
-        detenerSnake();
-        return;
+function placeComida() {
+    comida = {
+        x: Math.floor(Math.random() * (canvas.width / gridSize)),
+        y: Math.floor(Math.random() * (canvas.height / gridSize))
+    };
+}
+
+function updateSnake() {
+    const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+
+    if (head.x < 0 || head.x >= canvas.width/gridSize || head.y < 0 || head.y >= canvas.height/gridSize) {
+        return gameOverSnake();
+    }
+    
+    for (let i = 0; i < snake.length; i++) {
+        if (snake[i].x === head.x && snake[i].y === head.y) return gameOverSnake();
     }
 
-    cambiandoDireccion = false;
-    limpiarCanvas();
-    dibujarComida();
-    avanzarSerpiente();
-    dibujarSerpiente();
-}
+    snake.unshift(head);
 
-function limpiarCanvas() {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
-
-function dibujarSerpiente() {
-    ctx.fillStyle = "#28a745"; // Color verde
-    snake.forEach(parte => {
-        ctx.fillRect(parte.x * tamanoGrilla, parte.y * tamanoGrilla, tamanoGrilla - 2, tamanoGrilla - 2);
-    });
-}
-
-function avanzarSerpiente() {
-    const cabeza = {x: snake[0].x + dx, y: snake[0].y + dy};
-    snake.unshift(cabeza);
-
-    // Si come la comida
-    if (snake[0].x === comida.x && snake[0].y === comida.y) {
-        puntajeSnake += 10;
-        document.getElementById("snake-score").textContent = puntajeSnake;
-        generarComida();
-        // Sonido de acierto (reutilizando tus archivos)
-        new Audio('sounds/victory.mp3').play().catch(() => {});
+    if (head.x === comida.x && head.y === comida.y) {
+        new Audio('sounds/eating.mp3').play().catch(() => {});
+        placeComida();
     } else {
         snake.pop();
     }
+
+    drawSnake();
 }
 
-function finDelJuego() {
-    // Chocar con paredes
-    const chocaPared = snake[0].x < 0 || snake[0].x >= canvas.width / tamanoGrilla ||
-                       snake[0].y < 0 || snake[0].y >= canvas.height / tamanoGrilla;
-    
-    // Chocar consigo misma
-    for (let i = 4; i < snake.length; i++) {
-        if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) return true;
-    }
-    return chocaPared;
+function drawSnake() {
+    ctx.fillStyle = "#212529"; 
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#dc3545"; 
+    ctx.fillRect(comida.x * gridSize, comida.y * gridSize, gridSize - 1, gridSize - 1);
+
+    ctx.fillStyle = "#198754"; 
+    snake.forEach(part => {
+        ctx.fillRect(part.x * gridSize, part.y * gridSize, gridSize - 1, gridSize - 1);
+    });
 }
 
-function generarComida() {
-    comida.x = Math.floor(Math.random() * (canvas.width / tamanoGrilla));
-    comida.y = Math.floor(Math.random() * (canvas.height / tamanoGrilla));
+function gameOverSnake() {
+    new Audio('sounds/clapping.mp3').play().catch(() => {});
+
+    clearInterval(snakeInterval);
+    snakeActive = false;
+
+    alert("¡Juego Terminado en Snake!");
 }
 
-function dibujarComida() {
-    ctx.fillStyle = "red";
-    ctx.fillRect(comida.x * tamanoGrilla, comida.y * tamanoGrilla, tamanoGrilla - 2, tamanoGrilla - 2);
-}
+document.addEventListener("keydown", (e) => {
+    if (!snakeActive) return;
+    const teclas = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+    if (teclas.includes(e.key)) e.preventDefault(); 
 
-// Control por teclado con bloqueo de scroll
-document.addEventListener("keydown", (evento) => {
-    // Definimos las teclas que queremos bloquear para el scroll
-    const teclasJuego = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "];
-
-    // Solo bloqueamos el comportamiento si el juego está activo (canvas visible)
-    const juegoActivo = !document.getElementById("snakeCanvas").classList.contains("d-none");
-
-    if (teclasJuego.includes(evento.key) && juegoActivo) {
-        evento.preventDefault(); // Detiene el scroll del navegador
-    }
-
-    if (cambiandoDireccion || !juegoActivo) return;
-    cambiandoDireccion = true;
-
-    const tecla = evento.key;
-    if (tecla === "ArrowUp" && dy === 0) { dx = 0; dy = -1; }
-    if (tecla === "ArrowDown" && dy === 0) { dx = 0; dy = 1; }
-    if (tecla === "ArrowLeft" && dx === 0) { dx = -1; dy = 0; }
-    if (tecla === "ArrowRight" && dx === 0) { dx = 1; dy = 0; }
+    if (e.key === "ArrowUp" && dy === 0) { dx = 0; dy = -1; }
+    if (e.key === "ArrowDown" && dy === 0) { dx = 0; dy = 1; }
+    if (e.key === "ArrowLeft" && dx === 0) { dx = -1; dy = 0; }
+    if (e.key === "ArrowRight" && dx === 0) { dx = 1; dy = 0; }
 });
 
-function detenerSnake() {
-    clearInterval(snakeInterval);
-    document.getElementById("snakeCanvas").classList.add("d-none");
-    document.getElementById("snake-ui").classList.add("d-none");
-    document.getElementById("snake-inicio-cont").classList.remove("d-none");
+
+// --- 10. WHACK-A-MOLE ---
+let moleInterval;
+let moleScore = 0;
+let moleActive = false;
+
+function startWhack() {
+    moleScore = 0;
+    document.getElementById('mole-score').textContent = moleScore;
+    moleActive = true;
+    clearInterval(moleInterval);
+
+    moleInterval = setInterval(() => {
+        const holes = document.querySelectorAll('.hole');
+        
+        holes.forEach(h => h.classList.remove('topo-visible'));
+        
+        if (!moleActive) return clearInterval(moleInterval);
+
+        const randomHole = holes[Math.floor(Math.random() * holes.length)];
+        
+        randomHole.classList.add('topo-visible');
+        
+        setTimeout(() => {
+            if (moleActive) { 
+                randomHole.classList.remove('topo-visible');
+            }
+        }, 850); 
+
+    }, 1100); 
 }
 
-// --- LÓGICA JUEGO DE REFLEJOS ---
-
-let puntajeReflejos = 0;
-let reflejosInterval;
-let areaJuego = document.getElementById("area-juego-reflejos");
-let objetivo = document.getElementById("objetivo");
-
-function iniciarReflejos() {
-    // UI
-    document.getElementById("reflejos-inicio-cont").classList.add("d-none");
-    document.getElementById("area-juego-reflejos").classList.remove("d-none");
-    document.getElementById("reflejos-ui").classList.remove("d-none");
-
-    puntajeReflejos = 0;
-    document.getElementById("reflejos-score").textContent = puntajeReflejos;
-
-    moverObjetivo();
-    // Cambia de lugar automáticamente cada 1.2 segundos si no le das click
-    reflejosInterval = setInterval(moverObjetivo, 1200);
-}
-
-function moverObjetivo() {
-    const areaW = areaJuego.clientWidth;
-    const areaH = areaJuego.clientHeight;
-
-    // Generar posiciones aleatorias (restando el tamaño del objetivo)
-    const posX = Math.floor(Math.random() * (areaW - 70));
-    const posY = Math.floor(Math.random() * (areaH - 70));
-
-    // Cambiar imagen aleatoriamente usando Picsum
-    const randomId = Math.floor(Math.random() * 100);
-    document.getElementById("img-reflejo").src = `https://picsum.photos/id/${randomId}/60/60`;
-
-    // Aplicar nuevas coordenadas
-    objetivo.style.left = posX + "px";
-    objetivo.style.top = posY + "px";
-}
-
-let movimiento = true;
-function atrapado() {
-    // Sumar puntos
+function hitMole(index) {
+    if (!moleActive) return;
     
-    puntajeReflejos += 10;
-    document.getElementById("reflejos-score").textContent = puntajeReflejos;
-
-    // Sonido de victoria (reutilizando tus sonidos existentes)
-    if (movimiento) {
-        new Audio('sounds/bongo1.mp3').play().catch(() => {});
-        movimiento = false;
-    } else {
-        new Audio('sounds/bongo2.mp3').play().catch(() => {});
-        movimiento = true;
+    const hole = document.querySelectorAll('.hole')[index];
+    
+    if (hole.classList.contains('topo-visible')) {
+        moleScore += 10;
+        document.getElementById('mole-score').textContent = moleScore;
+        
+        hole.classList.remove('topo-visible');
+        
+        new Audio('sounds/minecraft_hurt.mp3').play().catch(() => {});
     }
-
-    // Reiniciar el intervalo para que no se mueva justo después de darle click
-    clearInterval(reflejosInterval);
-    moverObjetivo();
-    reflejosInterval = setInterval(moverObjetivo, 1200);
-}
-
-function detenerReflejos() {
-    clearInterval(reflejosInterval);
-    document.getElementById("reflejos-inicio-cont").classList.remove("d-none");
-    document.getElementById("area-juego-reflejos").classList.add("d-none");
-    document.getElementById("reflejos-ui").classList.add("d-none");
-}
-
-// --- LÓGICA WHACK-A-MOLE ---
-
-let lastHole;
-let moleTimeout;
-let whackScore = 0;
-let whackActive = false;
-
-function iniciarWhack() {
-    // UI
-    document.getElementById("mole-inicio-cont").classList.add("d-none");
-    document.getElementById("whack-ui").classList.remove("d-none");
-    
-    // Crear los topos dentro de los agujeros si no existen
-    const holes = document.querySelectorAll('.hole');
-    holes.forEach(hole => {
-        if (!hole.querySelector('.mole')) {
-            const moleDiv = document.createElement('div');
-            moleDiv.className = 'mole';
-            moleDiv.onclick = hitMole;
-            hole.appendChild(moleDiv);
-        }
-    });
-
-    whackScore = 0;
-    document.getElementById("whack-score").textContent = whackScore;
-    whackActive = true;
-    showMole();
-}
-
-function randomHole() {
-    const holes = document.querySelectorAll('.hole');
-    const idx = Math.floor(Math.random() * holes.length);
-    const hole = holes[idx];
-    
-    if (hole === lastHole) return randomHole();
-    lastHole = hole;
-    return hole;
-}
-
-function showMole() {
-    if (!whackActive) return;
-
-    const hole = randomHole();
-    const time = Math.random() * (1000 - 500) + 500; // Aparece entre 0.5 y 1 segundo
-    
-    hole.classList.add('up');
-
-    moleTimeout = setTimeout(() => {
-        hole.classList.remove('up');
-        if (whackActive) showMole();
-    }, time);
-}
-
-function hitMole() {
-    if (!this.parentNode.classList.contains('up')) return; // Solo si está arriba
-
-    whackScore += 10;
-    this.parentNode.classList.remove('up'); // Se esconde al golpearlo
-    document.getElementById("whack-score").textContent = whackScore;
-
-    // Sonido de acierto
-    new Audio('sounds/minecraft_hurt.mp3').play().catch(() => {});
-}
-
-function detenerWhack() {
-    whackActive = false;
-    clearTimeout(moleTimeout);
-    document.querySelectorAll('.hole').forEach(h => h.classList.remove('up'));
-    document.getElementById("mole-inicio-cont").classList.remove("d-none");
-    document.getElementById("whack-ui").classList.add("d-none");
 }
